@@ -1,37 +1,39 @@
 package stateManager;
 
-import commands.*;
+import commands.ExitCommand;
 import models.MusicBand;
+import models.User;
 import shared.Request;
 import utility.ConsoleWriter;
 import utility.MusicBandScanner;
 import utility.Program;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 
 
 /**
  * Класс, отвечающий за определение команд и дальнейшее их исполнение.
  */
 public class CommandsManager {
-    private static final Map<String, Command> commands = Map.ofEntries(
-            Map.entry(new HelpCommand().getName(), new HelpCommand()),
-            Map.entry(new InfoCommand().getName(), new InfoCommand()),
-            Map.entry(new ShowCommand().getName(), new ShowCommand()),
-            Map.entry(new InsertCommand().getName(), new InsertCommand()),
-            Map.entry(new UpdateCommand().getName(), new UpdateCommand()),
-            Map.entry(new RemoveCommand().getName(), new RemoveCommand()),
-            Map.entry(new ClearCommand().getName(), new ClearCommand()),
-            Map.entry(new ScriptCommand().getName(), new ScriptCommand()),
-            Map.entry(new ExitCommand().getName(), new ExitCommand()),
-            Map.entry(new RemoveAllGreaterCommand().getName(), new RemoveAllGreaterCommand()),
-            Map.entry(new RemoveAllLowerCommand().getName(), new RemoveAllLowerCommand()),
-            Map.entry(new HistoryCommand().getName(), new HistoryCommand()),
-            Map.entry(new MinByCreationDateCommand().getName(), new MinByCreationDateCommand()),
-            Map.entry(new PrintAscendingCommand().getName(), new PrintAscendingCommand()),
-            Map.entry(new PrintUniqueParticipantsCommand().getName(), new PrintUniqueParticipantsCommand()),
-            Map.entry(new RegisterCommand().getName(), new RegisterCommand())
+    private static final List<String> commands = Arrays.asList(
+            "help",
+            "info",
+            "show",
+            "insert",
+            "update",
+            "remove_key",
+            "clear",
+            "execute_script",
+            "exit",
+            "remove_greater",
+            "remove_lower",
+            "history",
+            "min_by_creation_date",
+            "print_ascending",
+            "print_unique_number_of_participants",
+            "login",
+            "register"
     );
 
     /**
@@ -41,37 +43,54 @@ public class CommandsManager {
      */
     public static void defineCommand(String[] userInput) {
         String commandName = userInput[0];
-        if (commands.containsKey(commandName)) {
-            if (userInput.length > 4) {
+
+        if (commandName.equals("exit")) {
+            ExitCommand.execute();
+            return;
+        }
+
+        if (commandName.equals("login") && userInput.length == 1) {
+            UserManager.login();
+            return;
+        }
+
+        if (commandName.equals("register") && userInput.length == 1) {
+            UserManager.register();
+            return;
+        }
+
+        if (!UserManager.isLogin()) {
+            ConsoleWriter.getInstance().alert("Вам необходимо залогиниться,\nдля этого напишите команду login или register.");
+            return;
+        }
+
+
+
+        if (commands.contains(commandName)) {
+            if (userInput.length > 2) {
                 ConsoleWriter.getInstance().alert("Слишком много аргументов!");
                 return;
             }
-            if (userInput.length < 3) {
-                ConsoleWriter.getInstance().alert("Команда отправлена без логина и пароля!");
-                return;
-            }
-            if (commandName.equals(new ExitCommand().getName())) {
-                new ExitCommand().execute();
-                return;
-            }
-            String stringArg = null;
+            String stringArg = userInput.length == 2 ? userInput[1] : null;
             MusicBand musicBandArg = null;
-            String username = userInput[userInput.length - 2], password = userInput[userInput.length - 1];
-            if (userInput.length == 4) {
-                stringArg = userInput[1];
-            }
+            User user = UserManager.getUser();
+            String username = user.getUsername(),
+                    password = user.getPassword();
             if (Arrays.asList(
-                    new InsertCommand().getName(),
-                    new UpdateCommand().getName(),
-                    new RemoveAllGreaterCommand().getName(),
-                    new RemoveAllLowerCommand().getName()
-            ).contains(commandName)) {
+                    "insert", "update"
+                ).contains(commandName) && userInput.length == 2 ||
+                    Arrays.asList(
+                            "remove_greater", "remove_lower"
+                    ).contains(commandName) && userInput.length == 1) {
                 musicBandArg = MusicBandScanner.scan();
             }
+
             sendCommand(commandName, stringArg, musicBandArg, username, password);
+
             try {
                 System.out.println(getResponse().trim());
-            } catch (NullPointerException ignored) {}
+            } catch (NullPointerException ignored) {
+            }
 
         } else if (commandName.isEmpty()) {
             ConsoleWriter.getInstance().alert("Пустая команда!");
@@ -81,8 +100,7 @@ public class CommandsManager {
     }
 
     private static void sendCommand(String commandName, String arg, MusicBand musicBand, String username, String password) {
-        Command command = commands.get(commandName);
-        Request request = new Request(command, arg, musicBand);
+        Request request = new Request(commandName, arg, musicBand);
         request.setUsername(username);
         request.setPassword(password);
         Program.getInstance().getRequestLogic().send(request);

@@ -49,6 +49,9 @@ public class ConsoleWriter {
     public void print(String message) {
         System.out.print(message);
     }
+    public void printWithColon(String message) {
+        System.out.print(message + ": ");
+    }
 
     public static synchronized ConsoleWriter getInstance() {
         if (instance == null) {

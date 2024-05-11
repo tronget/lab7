@@ -1,10 +1,10 @@
 package commands;
 
 import network.ResponseBuilder;
-import stateManager.CollectionManager;
+import network.db.DmlQueryManager;
 import utility.Program;
 
-import java.util.Hashtable;
+import java.sql.SQLException;
 
 public class ClearCommand extends Command {
     public ClearCommand() {
@@ -17,8 +17,12 @@ public class ClearCommand extends Command {
      */
     @Override
     public void execute() {
-        CollectionManager.getInstance().setCollection(new Hashtable<>());
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-        responseBuilder.add("Коллекция очищена.");
+        try {
+            new DmlQueryManager(user).deleteMusicByUserId();
+            responseBuilder.add("Объекты пользователя " + user.getUsername() + " удалены.");
+        } catch (SQLException e) {
+            responseBuilder.add("Ошибка при удалении объектов пользователя " + user.getUsername() + "!");
+        }
     }
 }

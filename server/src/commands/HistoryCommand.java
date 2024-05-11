@@ -14,6 +14,6 @@ public class HistoryCommand extends Command {
     @Override
     public void execute() {
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-        responseBuilder.add(Program.getInstance().printHistory());
+        responseBuilder.add(Program.getInstance().printHistory(user.getUsername()));
     }
 }

@@ -22,7 +22,7 @@ public class ConsoleScanner implements Scannable {
             if (Program.getInstance().isWorkingStatus()) {
                 CommandsManager.defineCommand(userInput);
             }
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException e) {  //
             Program.getInstance().stop();
         }
     }

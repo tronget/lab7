@@ -3,11 +3,13 @@ package commands;
 import exceptions.NonexistantIdException;
 import models.MusicBand;
 import network.ResponseBuilder;
+import network.db.DmlQueryManager;
 import stateManager.CollectionManager;
 import utility.MusicBandScanner;
 import utility.Program;
 import utility.ScriptExecutor;
 
+import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Objects;
@@ -40,16 +42,15 @@ public class UpdateCommand extends CommandWithMB {
                     }
                 };
             }
-            boolean flag = true;
-            String key = "";
+
+            String key = null;
             for (Map.Entry<String, MusicBand> entry : collection.entrySet()) {
                 if (Objects.equals(entry.getValue().getID(), Long.valueOf(id))) {
-                    flag = false;
                     key = entry.getKey();
                     break;
                 }
             }
-            if (flag) {
+            if (key == null) {
                 throw new NonexistantIdException(id);
             }
 
@@ -60,19 +61,14 @@ public class UpdateCommand extends CommandWithMB {
                 }
             }
 
-            collection.values().forEach(el -> {
-                if (el.getID() == Long.parseLong(id)) {
-                    musicBand.setCREATION_DATE(el.getCREATION_DATE());
-                }
-            });
+            new DmlQueryManager(user).updateMusicById(Long.parseLong(id), musicBand);
 
-            musicBand.setID(Long.parseLong(id));
-            collection.put(key, musicBand);
-            CollectionManager.getInstance().setCollection(collection);
             responseBuilder.add("Элемент коллекции успешно обновлен.");
 
         } catch (NonexistantIdException | NumberFormatException e) {
             responseBuilder.add(e.getMessage());
+        } catch (SQLException e) {
+            responseBuilder.add("Ошибка при обновлении объекта в базе данных.");
         }
     }
 }

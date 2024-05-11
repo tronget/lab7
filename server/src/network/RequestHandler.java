@@ -3,18 +3,20 @@ package network;
 import commands.Command;
 import commands.CommandWithMB;
 import models.MusicBand;
+import network.db.User;
 import shared.Request;
+import stateManager.CommandsManager;
 import utility.Program;
 
 public class RequestHandler {
-    private Command command;
+    private String commandName;
     private MusicBand musicBand;
     private String argument;
     private String username;
     private String password;
 
     public RequestHandler(Request request) {
-        this.command = request.getCommand();
+        this.commandName = request.getCommandName();
         this.musicBand = request.getMusicBand();
         this.argument = request.getStringArg();
         this.username = request.getUsername();
@@ -22,7 +24,23 @@ public class RequestHandler {
     }
 
     public void handle() {
-        Program.getInstance().updateHistory(command.getDescription());
+        Command command = CommandsManager.getCommandByName(commandName);
+        if (command == null) {
+            Program.getInstance().getResponseBuilder().add("Неизвестная команда!");
+            return;
+        }
+        User user = new User(username, password);
+        command.setUser(user);
+
+        if (command.getName().equals("login") || command.getName().equals("register")) {
+            command.execute();
+            return;
+        }
+
+
+        Program.getInstance().updateHistory(username, commandName);
+
+
         if (musicBand != null) {
             ((CommandWithMB) command).setMusicBand(musicBand);
         }
@@ -32,4 +50,6 @@ public class RequestHandler {
             command.execute();
         }
     }
+
+
 }

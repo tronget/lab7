@@ -46,6 +46,18 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
         this.studio = studio;
     }
 
+    public MusicBand(MusicBand musicBandCopy) {
+        this.ID = musicBandCopy.ID;
+        this.name = musicBandCopy.name;
+        this.coordinates = musicBandCopy.coordinates;
+        this.CREATION_DATE = musicBandCopy.CREATION_DATE;
+        this.numberOfParticipants = musicBandCopy.numberOfParticipants;
+        this.establishmentDate = musicBandCopy.establishmentDate;
+        this.genre = musicBandCopy.genre;
+        this.studio = musicBandCopy.studio;
+    }
+
+
     public Long getID() {
         return ID;
     }

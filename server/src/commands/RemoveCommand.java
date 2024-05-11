@@ -1,12 +1,12 @@
 package commands;
 
 import exceptions.NonexistentKeyException;
-import models.MusicBand;
 import network.ResponseBuilder;
+import network.db.DmlQueryManager;
 import stateManager.CollectionManager;
 import utility.Program;
 
-import java.util.Hashtable;
+import java.sql.SQLException;
 
 public class RemoveCommand extends Command {
     public RemoveCommand() {
@@ -25,12 +25,12 @@ public class RemoveCommand extends Command {
             if (!CollectionManager.getInstance().hasSuchKey(key)) {
                 throw new NonexistentKeyException(key);
             }
-            Hashtable<String, MusicBand> collection = CollectionManager.getInstance().getCollection();
-            collection.remove(key);
-            CollectionManager.getInstance().setCollection(collection);
+            new DmlQueryManager(user).deleteMusicByKey(key);
             responseBuilder.add("Элемент с ключом %s удален успешно.".formatted(key));
         } catch (NonexistentKeyException e) {
             responseBuilder.add(e.getMessage());
+        } catch (SQLException e) {
+            responseBuilder.add("Ошибка при удалении элемента из базы данных!");
         }
     }
 }

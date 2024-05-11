@@ -2,6 +2,7 @@ package utility;
 
 import fileManager.FileReader;
 import network.ResponseBuilder;
+import network.db.User;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -24,6 +25,7 @@ public class ScriptExecutor {
     private final InputStream originalInputStream = System.in;
     private final HashSet<File> files = new HashSet<>();
     private static ScriptExecutor instance;
+    private User user;
 
     private ScriptExecutor() {
     }
@@ -35,6 +37,13 @@ public class ScriptExecutor {
         return instance;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     /**
      * Устанавливает булево значение наличия ошибки, которая могла

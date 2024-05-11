@@ -3,13 +3,13 @@ package commands;
 import exceptions.ExtraArgumentException;
 import exceptions.NecessaryArgumentException;
 import network.ResponseBuilder;
+import network.db.User;
 import utility.Program;
 
-import java.io.Serializable;
-
-public abstract class Command implements Serializable {
+public abstract class Command {
     protected String name;
     protected String description;
+    protected User user;
 
     public String getName() {
         return name;
@@ -17,6 +17,10 @@ public abstract class Command implements Serializable {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void execute() {

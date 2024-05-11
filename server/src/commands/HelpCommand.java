@@ -29,5 +29,7 @@ public class HelpCommand extends Command {
         responseBuilder.add(new MinByCreationDateCommand().description);
         responseBuilder.add(new PrintAscendingCommand().description);
         responseBuilder.add(new PrintUniqueParticipantsCommand().description);
+        responseBuilder.add(new RegisterCommand().description);
+        responseBuilder.add(new LoginCommand().description);
     }
 }

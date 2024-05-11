@@ -1,6 +1,5 @@
 package network;
 
-import commands.ExitCommand;
 import shared.Request;
 
 import java.io.ByteArrayInputStream;

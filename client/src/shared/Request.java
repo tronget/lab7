@@ -1,7 +1,7 @@
 package shared;
 
-import commands.Command;
 import models.MusicBand;
+import models.User;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,26 +11,26 @@ public class Request implements Serializable {
     private static final long serialVersionUID = 666L;
 
     private MusicBand musicBandArgument;
-    private Command command;
+    private String commandName;
     private String stringArgument;
     private String username;
     private String password;
 
-    public Request(Command command) {
-        this.command = command;
+    public Request(String commandName) {
+        this.commandName = commandName;
     }
 
-    public Request(Command command, MusicBand musicBandArgument) {
-        this.command = command;
+    public Request(String commandName, MusicBand musicBandArgument) {
+        this.commandName = commandName;
         this.musicBandArgument = musicBandArgument;
     }
 
-    public Request(Command command, String stringArgument) {
-        this.command = command;
+    public Request(String commandName, String stringArgument) {
+        this.commandName = commandName;
         this.stringArgument = stringArgument;
     }
-    public Request(Command command, String stringArgument, MusicBand musicBandArgument) {
-        this.command = command;
+    public Request(String commandName, String stringArgument, MusicBand musicBandArgument) {
+        this.commandName = commandName;
         this.stringArgument = stringArgument;
         this.musicBandArgument = musicBandArgument;
     }
@@ -43,12 +43,12 @@ public class Request implements Serializable {
         this.musicBandArgument = musicBand;
     }
 
-    public Command getCommand() {
-        return command;
+    public String getCommandName() {
+        return commandName;
     }
 
-    public void setCommand(Command command) {
-        this.command = command;
+    public void setCommandName(String commandName) {
+        this.commandName = commandName;
     }
 
     public String getStringArg() {
@@ -74,9 +74,13 @@ public class Request implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+    public void setUser(User user) {
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+    }
 
     @Override
     public String toString() {
-        return "Request: " + command + " " + musicBandArgument + " " + stringArgument;
+        return "Request: " + commandName + " " + musicBandArgument + " " + stringArgument;
     }
 }

@@ -2,7 +2,6 @@ package network;
 
 import org.apache.commons.lang3.ArrayUtils;
 import utility.ConsoleWriter;
-import utility.Program;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

@@ -23,5 +23,6 @@ public class InfoCommand extends Command {
         String collectionName = collection.getClass().getSimpleName();
         responseBuilder.add("Коллекция %s: \"Музыкальные группы\"".formatted(collectionName));
         responseBuilder.add("Кол-во элементов: %s".formatted(collection.size()));
+        responseBuilder.add("Пользователь: " + user.getUsername());
     }
 }

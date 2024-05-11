@@ -7,9 +7,9 @@ import shared.Request;
 import java.io.IOException;
 import java.nio.channels.DatagramChannel;
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -28,27 +28,7 @@ public class Program implements ProgramInterface {
     private RequestLogic requestLogic;
     private ResponseLogic responseLogic;
     private final ResponseBuilder responseBuilder = new ResponseBuilder();
-    private final LinkedList<String> history = new LinkedList<>();
-
-    public final List<String> commands = Arrays.asList(
-            "help",
-            "info",
-            "show",
-            "insert",
-            "update",
-            "remove_key",
-            "clear",
-            "save",
-            "execute_script",
-            "exit",
-            "remove_greater",
-            "remove_lower",
-            "history",
-            "min_by_creation_date",
-            "print_ascending",
-            "print_unique_number_of_participants"
-    );
-
+    private final Map<String, LinkedList<String>> history = new HashMap<>();
 
     private Program() {
         try {
@@ -83,32 +63,24 @@ public class Program implements ProgramInterface {
         return databaseHandler;
     }
 
-    /**
-     * Возвращает список команд.
-     *
-     * @return список команд.
-     */
-    public List<String> getCommands() {
-        return commands;
-    }
 
     /**
      * Выводит в консоль историю команд (последние 10 команд).
      */
-    public String printHistory() {
-        return history.toString();
+    public String printHistory(String username) {
+        return history.get(username).toString();
     }
 
-    /**
-     * Обновляет состояние истории команд.
-     *
-     * @param s команда, которую надо добавить
-     */
-    public void updateHistory(String s) {
-        if (history.size() == 10) {
-            history.removeFirst();
+
+    public void updateHistory(String username, String commandName) {
+        if (!history.containsKey(username)) {
+            history.put(username, new LinkedList<>());
         }
-        history.addLast(s);
+        LinkedList<String> historyList = history.get(username);
+        if (historyList.size() >= 10) {
+            historyList.removeFirst();
+        }
+        historyList.addLast(commandName);
     }
 
     /**
@@ -129,7 +101,7 @@ public class Program implements ProgramInterface {
         if (!workingStatus && !isError) {
             workingStatus = true;
             while (workingStatus) {
-                Request request = getRequestLogic().receive();
+                Request request = requestLogic.receive();
                 if (request == null) continue;
                 RequestHandler requestHandler = new RequestHandler(request);
                 requestHandler.handle();

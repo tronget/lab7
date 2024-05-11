@@ -1,6 +1,8 @@
 package utility;
 
 import commands.ExitCommand;
+import commands.LoginCommand;
+import commands.RegisterCommand;
 import commands.ScriptCommand;
 import stateManager.CommandsManager;
 
@@ -12,6 +14,7 @@ import java.util.Scanner;
  */
 public class ScriptScanner {
     private final Scanner scanner;
+
     public ScriptScanner(Scanner scanner) {
         this.scanner = scanner;
     }
@@ -21,26 +24,29 @@ public class ScriptScanner {
      * Затем определяет команду, которая будет выполняться.
      */
     public void scan() {
+        ScriptExecutor scriptExecutor = ScriptExecutor.getInstance();
         String[] userInput = scanner.nextLine().trim().split("\\s+");
         if (Program.getInstance().isWorkingStatus()) {
             if (userInput[0].equals(new ScriptCommand().getName()) && userInput.length == 2) {
                 File file = new File(userInput[1]);
                 // Если такого файла еще не было,
                 // то сохранить оставшийся текст из скрипта в resursionScripts;
-                if (!ScriptExecutor.getInstance().getFiles().contains(file)) {
+                if (!scriptExecutor.getFiles().contains(file)) {
                     StringBuilder scriptText = new StringBuilder();
                     while (scanner.hasNextLine()) {
                         scriptText.append(scanner.nextLine()).append("\n");
                     }
-                    ScriptExecutor.getInstance().updateRecursionScripts(scriptText.toString());
+                    scriptExecutor.updateRecursionScripts(scriptText.toString());
                 }
-            } else if(userInput[0].equals(new ExitCommand().getName())) {
+            } else if (userInput[0].equals(new ExitCommand().getName()) ||
+                    userInput[0].equals(new LoginCommand().getName()) ||
+                    userInput[0].equals(new RegisterCommand().getName())) {
                 Program.getInstance().getResponseBuilder().add(
-                        "Команда exit не выполняется в скрипте!"
+                        "Команда " + userInput[0] + " не выполняется в скрипте!"
                 );
                 return;
             }
-            CommandsManager.defineCommand(userInput);
+            CommandsManager.defineCommand(userInput, scriptExecutor.getUser());
         }
     }
 }

@@ -3,13 +3,13 @@ package commands;
 import exceptions.ExistantKeyException;
 import models.MusicBand;
 import network.ResponseBuilder;
+import network.db.DmlQueryManager;
 import stateManager.CollectionManager;
-import utility.IdGenerator;
 import utility.MusicBandScanner;
 import utility.Program;
 import utility.ScriptExecutor;
 
-import java.util.Date;
+import java.sql.SQLException;
 import java.util.Hashtable;
 
 public class InsertCommand extends CommandWithMB {
@@ -36,17 +36,16 @@ public class InsertCommand extends CommandWithMB {
                 if (musicBand == null) {
                     return;
                 }
-            } else {
-                musicBand.setID(IdGenerator.generate());
-                musicBand.setCREATION_DATE(new Date());
             }
 
-            collection.put(key, musicBand);
-            CollectionManager.getInstance().setCollection(collection);
+            new DmlQueryManager(user).insertMusic(key, musicBand);
+
             responseBuilder.add("Элемент сохранен в коллекции.");
 
         } catch (ExistantKeyException e) {
             responseBuilder.add(e.getMessage());
+        } catch (SQLException e) {
+            responseBuilder.add("Ошибка при добавлении объекта в базу данных!");
         }
     }
 }

@@ -46,7 +46,6 @@ public class MusicBandScanner {
      */
     private static MusicBand scanFromScript() throws ScriptExecutionError {
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-        ConsoleWriter consoleWriter = ConsoleWriter.getInstance();
         Scanner scanner = scriptExecutor.getScannerForScript();
         String name = null;
         name = scanner.nextLine().trim();
