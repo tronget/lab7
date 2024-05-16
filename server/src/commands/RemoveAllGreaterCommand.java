@@ -3,7 +3,7 @@ package commands;
 import models.MusicBand;
 import network.ResponseBuilder;
 import network.db.DmlQueryManager;
-import stateManager.CollectionManager;
+import manager.stateManager.CollectionManager;
 import utility.MusicBandScanner;
 import utility.Program;
 import utility.ScriptExecutor;
@@ -24,6 +24,7 @@ public class RemoveAllGreaterCommand extends CommandWithMB {
      */
     @Override
     public void execute() {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         if (ScriptExecutor.getInstance().isScriptExecution()) {
             musicBand = MusicBandScanner.scan();
@@ -44,9 +45,9 @@ public class RemoveAllGreaterCommand extends CommandWithMB {
             for (long id : removedIdList) {
                 queryManager.deleteMusicById(id);
             }
-            responseBuilder.add("Из коллекции удалены все элементы, превышающие заданный.");
+            responseBuilder.add(username, "Из коллекции удалены все элементы, превышающие заданный.");
         } catch (SQLException e) {
-            responseBuilder.add("Ошибка при удалении объектов из базы данных!");
+            responseBuilder.add(username, "Ошибка при удалении объектов из базы данных!");
         }
     }
 }

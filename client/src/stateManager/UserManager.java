@@ -14,6 +14,9 @@ public class UserManager {
         request.setUser(inputUser);
         Program.getInstance().getRequestLogic().send(request);
         String response = Program.getInstance().getResponseLogic().receive();
+        if (response == null) {
+            return;
+        }
         if (response.trim().equals("login")) {
             user = inputUser;
             System.out.println("Выполнен вход в аккаунт " + user.getUsername() + ".");

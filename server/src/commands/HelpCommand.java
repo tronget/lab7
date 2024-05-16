@@ -13,23 +13,24 @@ public class HelpCommand extends Command {
      */
     @Override
     public void execute() {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-        responseBuilder.add(this.description);
-        responseBuilder.add(new InfoCommand().description);
-        responseBuilder.add(new ShowCommand().description);
-        responseBuilder.add(new InsertCommand().description);
-        responseBuilder.add(new UpdateCommand().description);
-        responseBuilder.add(new RemoveCommand().description);
-        responseBuilder.add(new ClearCommand().description);
-        responseBuilder.add(new ScriptCommand().description);
-        responseBuilder.add(new ExitCommand().description);
-        responseBuilder.add(new RemoveAllGreaterCommand().description);
-        responseBuilder.add(new RemoveAllLowerCommand().description);
-        responseBuilder.add(new HistoryCommand().description);
-        responseBuilder.add(new MinByCreationDateCommand().description);
-        responseBuilder.add(new PrintAscendingCommand().description);
-        responseBuilder.add(new PrintUniqueParticipantsCommand().description);
-        responseBuilder.add(new RegisterCommand().description);
-        responseBuilder.add(new LoginCommand().description);
+        responseBuilder.add(username, this.description);
+        responseBuilder.add(username, new InfoCommand().description);
+        responseBuilder.add(username, new ShowCommand().description);
+        responseBuilder.add(username, new InsertCommand().description);
+        responseBuilder.add(username, new UpdateCommand().description);
+        responseBuilder.add(username, new RemoveCommand().description);
+        responseBuilder.add(username, new ClearCommand().description);
+        responseBuilder.add(username, new ScriptCommand().description);
+        responseBuilder.add(username, new ExitCommand().description);
+        responseBuilder.add(username, new RemoveAllGreaterCommand().description);
+        responseBuilder.add(username, new RemoveAllLowerCommand().description);
+        responseBuilder.add(username, new HistoryCommand().description);
+        responseBuilder.add(username, new MinByCreationDateCommand().description);
+        responseBuilder.add(username, new PrintAscendingCommand().description);
+        responseBuilder.add(username, new PrintUniqueParticipantsCommand().description);
+        responseBuilder.add(username, new RegisterCommand().description);
+        responseBuilder.add(username, new LoginCommand().description);
     }
 }

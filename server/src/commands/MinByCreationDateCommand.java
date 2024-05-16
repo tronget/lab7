@@ -2,7 +2,7 @@ package commands;
 
 import models.MusicBand;
 import network.ResponseBuilder;
-import stateManager.CollectionManager;
+import manager.stateManager.CollectionManager;
 import utility.Program;
 
 import java.util.Comparator;
@@ -19,13 +19,14 @@ public class MinByCreationDateCommand extends Command {
      */
     @Override
     public void execute() {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         Hashtable<String, MusicBand> collection = CollectionManager.getInstance().getCollection();
         if (collection.isEmpty()) {
-            responseBuilder.add("Пустая коллекция.");
+            responseBuilder.add(username, "Пустая коллекция.");
             return;
         }
         MusicBand min = collection.values().stream().sorted(Comparator.comparing(MusicBand::getCREATION_DATE)).toList().get(0);
-        responseBuilder.add(min.toString());
+        responseBuilder.add(username, min.toString());
     }
 }

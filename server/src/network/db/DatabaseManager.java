@@ -1,7 +1,7 @@
 package network.db;
 
 import models.MusicBand;
-import stateManager.CollectionManager;
+import manager.stateManager.CollectionManager;
 
 import java.util.HashMap;
 import java.util.Hashtable;

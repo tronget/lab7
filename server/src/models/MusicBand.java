@@ -20,12 +20,12 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
     private LocalDateTime establishmentDate; //Поле может быть null
     private MusicGenre genre; //Поле может быть null
     private Studio studio; //Поле может быть null
+    private int user_id;
+
 
     public MusicBand(String name, Coordinates coordinates, int numberOfParticipants, LocalDateTime establishmentDate, MusicGenre genre, Studio studio) {
-        this.ID = IdGenerator.generate();
         this.name = name;
         this.coordinates = coordinates;
-        this.CREATION_DATE = new Date();
         this.numberOfParticipants = numberOfParticipants;
         this.establishmentDate = establishmentDate;
         this.genre = genre;
@@ -53,6 +53,7 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
         this.genre = musicBandCopy.genre;
         this.studio = musicBandCopy.studio;
     }
+
 
     public Long getID() {
         return ID;
@@ -86,6 +87,10 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
         return studio;
     }
 
+    public int getUser_id() {
+        return user_id;
+    }
+
     public void setID(Long ID) {
         this.ID = ID;
     }
@@ -110,12 +115,12 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
         this.genre = genre;
     }
 
-    public void setCREATION_DATE(Date CREATION_DATE) {
-        this.CREATION_DATE = CREATION_DATE;
-    }
-
     public void setStudio(Studio studio) {
         this.studio = studio;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
     }
 
     @Override
@@ -133,14 +138,15 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
     @Override
     public String toString() {
         return "MusicBand{" +
-                "id=" + ID +
+                "ID=" + ID +
                 ", name='" + name + '\'' +
                 ", coordinates=" + coordinates +
-                ", creationDate=" + CREATION_DATE +
+                ", CREATION_DATE=" + CREATION_DATE +
                 ", numberOfParticipants=" + numberOfParticipants +
                 ", establishmentDate=" + establishmentDate +
                 ", genre=" + genre +
                 ", studio=" + studio +
+                ", user_id=" + user_id +
                 '}';
     }
 
@@ -151,7 +157,7 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
         MusicBand musicBand = (MusicBand) o;
         return numberOfParticipants == musicBand.numberOfParticipants && Objects.equals(ID, musicBand.ID) && Objects.equals(name, musicBand.name) && Objects.equals(coordinates, musicBand.coordinates) && Objects.equals(CREATION_DATE, musicBand.CREATION_DATE) && Objects.equals(establishmentDate, musicBand.establishmentDate) && genre == musicBand.genre && Objects.equals(studio, musicBand.studio);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(ID, name, coordinates, CREATION_DATE, numberOfParticipants, establishmentDate, genre, studio);

@@ -14,21 +14,24 @@ public class RegisterCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    public synchronized void execute() {
+        String username = user.getUsername();
         UserManager userManager = new UserManager(user);
         if (userManager.checkLogin()) {
             ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-            responseBuilder.add("Пользователь c логином " + user.getUsername() + " уже зарегистрирован!");
+            responseBuilder.add(username, "Пользователь c логином " + username + " уже зарегистрирован!");
             return;
         }
 
         try {
             new DmlQueryManager(user).insertUser();
             Program.getInstance().getResponseBuilder().add(
+                    username,
                     "Пользователь успешно зарегистрирован."
             );
         } catch (SQLException e) {
             Program.getInstance().getResponseBuilder().add(
+                    username,
                     "Ошибка при Регистрации пользователя."
             );
         }

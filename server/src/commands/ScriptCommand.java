@@ -13,7 +13,7 @@ public class ScriptCommand extends Command {
      * @param filename название файла со скриптом
      */
     @Override
-    public void execute(String filename) {
+    public synchronized void execute(String filename) {
         ScriptExecutor scriptExecutor = ScriptExecutor.getInstance();
         scriptExecutor.setUser(user);
         ScriptExecutor.getInstance().executeScript(filename);

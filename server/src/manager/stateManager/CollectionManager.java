@@ -1,4 +1,4 @@
-package stateManager;
+package manager.stateManager;
 
 import models.MusicBand;
 import network.db.DatabaseManager;

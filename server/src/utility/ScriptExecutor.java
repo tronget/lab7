@@ -1,6 +1,6 @@
 package utility;
 
-import fileManager.FileReader;
+import manager.fileManager.FileReader;
 import network.ResponseBuilder;
 import network.db.User;
 
@@ -114,11 +114,12 @@ public class ScriptExecutor {
      * @param fileName имя файла скрипта
      */
     public void executeScript(String fileName) {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         scriptExecution = true;
         File f = new File(fileName);
         if (files.contains(f)) {
-            responseBuilder.add("Execute_script не выполняется повторно!");
+            responseBuilder.add(username, "Execute_script не выполняется повторно!");
             return;
         }
         // добавление в стек информации об индикаторе ошибки во время исполнения определенного скрипта;
@@ -129,12 +130,12 @@ public class ScriptExecutor {
             String s = new FileReader().readFromFile(f);
             executeCommands(s);
             if (scriptErrorFlags.pop()) {
-                responseBuilder.add("Скрипт выполнился с ошибкой!");
+                responseBuilder.add(username, "Скрипт выполнился с ошибкой!");
             } else {
-                responseBuilder.add("Скрипт успешно выполнился!");
+                responseBuilder.add(username, "Скрипт успешно выполнился!");
             }
         } catch (IOException e) {
-            responseBuilder.add("Ошибка при чтении скрипта!");
+            responseBuilder.add(username, "Ошибка при чтении скрипта!");
             endOfExecution();
         }
     }
@@ -149,6 +150,7 @@ public class ScriptExecutor {
         System.setIn(inputStream);
         scannerForScript = new Scanner(System.in);
         ScriptScanner scriptScanner = new ScriptScanner(scannerForScript);
+        scriptScanner.setUser(user);
 
         while (scannerForScript.hasNextLine()) {
             scriptScanner.scan();

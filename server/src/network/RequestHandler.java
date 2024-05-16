@@ -5,7 +5,8 @@ import commands.CommandWithMB;
 import models.MusicBand;
 import network.db.User;
 import shared.Request;
-import stateManager.CommandsManager;
+import manager.stateManager.CommandsManager;
+import utility.HashSHA512;
 import utility.Program;
 
 public class RequestHandler {
@@ -20,13 +21,13 @@ public class RequestHandler {
         this.musicBand = request.getMusicBand();
         this.argument = request.getStringArg();
         this.username = request.getUsername();
-        this.password = request.getPassword();
+        this.password = HashSHA512.hashString(request.getPassword());
     }
 
     public void handle() {
         Command command = CommandsManager.getCommandByName(commandName);
         if (command == null) {
-            Program.getInstance().getResponseBuilder().add("Неизвестная команда!");
+            Program.getInstance().getResponseBuilder().add(username, "Неизвестная команда!");
             return;
         }
         User user = new User(username, password);

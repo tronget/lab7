@@ -28,7 +28,7 @@ public abstract class Command {
             throw new NecessaryArgumentException(name);
         } catch (NecessaryArgumentException e) {
             ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-            responseBuilder.add(e.getMessage());
+            responseBuilder.add(user.getUsername(), e.getMessage());
         }
     };
 
@@ -37,7 +37,7 @@ public abstract class Command {
             throw new ExtraArgumentException(name);
         } catch (ExtraArgumentException e) {
             ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-            responseBuilder.add(e.getMessage());
+            responseBuilder.add(user.getUsername(), e.getMessage());
         }
     }
 }

@@ -4,7 +4,8 @@ import commands.ExitCommand;
 import commands.LoginCommand;
 import commands.RegisterCommand;
 import commands.ScriptCommand;
-import stateManager.CommandsManager;
+import manager.stateManager.CommandsManager;
+import network.db.User;
 
 import java.io.File;
 import java.util.Scanner;
@@ -14,6 +15,7 @@ import java.util.Scanner;
  */
 public class ScriptScanner {
     private final Scanner scanner;
+    private User user;
 
     public ScriptScanner(Scanner scanner) {
         this.scanner = scanner;
@@ -42,11 +44,16 @@ public class ScriptScanner {
                     userInput[0].equals(new LoginCommand().getName()) ||
                     userInput[0].equals(new RegisterCommand().getName())) {
                 Program.getInstance().getResponseBuilder().add(
+                        user.getUsername(),
                         "Команда " + userInput[0] + " не выполняется в скрипте!"
                 );
                 return;
             }
-            CommandsManager.defineCommand(userInput, scriptExecutor.getUser());
+            CommandsManager.defineCommand(userInput, user);
         }
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

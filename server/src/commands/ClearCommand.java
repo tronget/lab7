@@ -17,12 +17,13 @@ public class ClearCommand extends Command {
      */
     @Override
     public void execute() {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         try {
             new DmlQueryManager(user).deleteMusicByUserId();
-            responseBuilder.add("Объекты пользователя " + user.getUsername() + " удалены.");
+            responseBuilder.add(username, "Объекты пользователя " + username + " удалены.");
         } catch (SQLException e) {
-            responseBuilder.add("Ошибка при удалении объектов пользователя " + user.getUsername() + "!");
+            responseBuilder.add(username, "Ошибка при удалении объектов пользователя " + username + "!");
         }
     }
 }

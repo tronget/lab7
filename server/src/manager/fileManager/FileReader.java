@@ -1,4 +1,4 @@
-package fileManager;
+package manager.fileManager;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;

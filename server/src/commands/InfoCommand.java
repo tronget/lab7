@@ -2,7 +2,7 @@ package commands;
 
 import models.MusicBand;
 import network.ResponseBuilder;
-import stateManager.CollectionManager;
+import manager.stateManager.CollectionManager;
 import utility.Program;
 
 import java.util.Hashtable;
@@ -18,11 +18,12 @@ public class InfoCommand extends Command {
      */
     @Override
     public void execute() {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         Hashtable<String, MusicBand> collection = CollectionManager.getInstance().getCollection();
         String collectionName = collection.getClass().getSimpleName();
-        responseBuilder.add("Коллекция %s: \"Музыкальные группы\"".formatted(collectionName));
-        responseBuilder.add("Кол-во элементов: %s".formatted(collection.size()));
-        responseBuilder.add("Пользователь: " + user.getUsername());
+        responseBuilder.add(username, "Коллекция %s: \"Музыкальные группы\"".formatted(collectionName));
+        responseBuilder.add(username, "Кол-во элементов: %s".formatted(collection.size()));
+        responseBuilder.add(username, "Пользователь: " + user.getUsername());
     }
 }

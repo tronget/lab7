@@ -11,16 +11,20 @@ public class LoginCommand extends Command {
     }
     @Override
     public void execute() {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         UserManager userManager = new UserManager(user);
         if (!userManager.checkLogin()) {
-            responseBuilder.add("Пользователь с логином " + user.getUsername() + " не зарегистрирован!");
+            responseBuilder.add(username, "Пользователь с логином " + user.getUsername() + " не зарегистрирован!");
             return;
         }
         if (!userManager.checkUser()) {
-            responseBuilder.add("Неправильный пароль!");
+            responseBuilder.add(username, "Неправильный пароль!");
             return;
         }
-        responseBuilder.add("login");
+        if (responseBuilder.get(username) != null) {
+
+        }
+        responseBuilder.add(username, "login");
     }
 }

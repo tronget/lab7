@@ -13,7 +13,8 @@ public class HistoryCommand extends Command {
      */
     @Override
     public void execute() {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-        responseBuilder.add(Program.getInstance().printHistory(user.getUsername()));
+        responseBuilder.add(username, Program.getInstance().printHistory(username));
     }
 }

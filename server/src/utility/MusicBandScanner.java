@@ -31,7 +31,8 @@ public class MusicBandScanner {
             } catch (ScriptExecutionError e) {
                 scriptExecutor.setScriptErrorFlags();
                 ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-                responseBuilder.add(e.getMessage());
+                String username = scriptExecutor.getUser().getUsername();
+                responseBuilder.add(username, e.getMessage());
             }
         }
         return null;
@@ -45,11 +46,12 @@ public class MusicBandScanner {
      * @throws ScriptExecutionError возникает при считывании неверных данных
      */
     private static MusicBand scanFromScript() throws ScriptExecutionError {
+        String username = scriptExecutor.getUser().getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         Scanner scanner = scriptExecutor.getScannerForScript();
         String name = null;
         name = scanner.nextLine().trim();
-        responseBuilder.add("Имя музыкальной группы: %s".formatted(name));
+        responseBuilder.add(username, "Имя музыкальной группы: %s".formatted(name));
         if (name.isEmpty()) {
             throw new ScriptExecutionError();
         }
@@ -59,7 +61,7 @@ public class MusicBandScanner {
             throw new ScriptExecutionError();
         }
         x = scanner.nextInt();
-        responseBuilder.add("Координата по X целое число (-768 < X < 2147483648): %s".formatted(x));
+        responseBuilder.add(username, "Координата по X целое число (-768 < X < 2147483648): %s".formatted(x));
         if (x <= -768) {
             throw new ScriptExecutionError();
         }
@@ -69,14 +71,14 @@ public class MusicBandScanner {
             throw new ScriptExecutionError();
         }
         y = scanner.nextDouble();
-        responseBuilder.add("Координата по Y: %s".formatted(y));
+        responseBuilder.add(username, "Координата по Y: %s".formatted(y));
 
         Integer numberOfParticipants = null;
         if (!scanner.hasNextInt()) {
             throw new ScriptExecutionError();
         }
         numberOfParticipants = scanner.nextInt();
-        responseBuilder.add("Кол-во участников: %s".formatted(numberOfParticipants));
+        responseBuilder.add(username, "Кол-во участников: %s".formatted(numberOfParticipants));
         if (numberOfParticipants <= 0) {
             throw new ScriptExecutionError();
         }
@@ -84,7 +86,7 @@ public class MusicBandScanner {
 
         LocalDateTime dateTime = null;
         String unparsedDate = scanner.next().trim();
-        responseBuilder.add("Дата основания через \"/\" (Год/Месяц/День/Час/Минута/Секунда): %s".formatted(unparsedDate));
+        responseBuilder.add(username, "Дата основания через \"/\" (Год/Месяц/День/Час/Минута/Секунда): %s".formatted(unparsedDate));
         if (unparsedDate.contains("//") || unparsedDate.charAt(0) == '/' || unparsedDate.charAt(unparsedDate.length() - 1) == '/' || unparsedDate.length() - unparsedDate.replace("/", "").length() != 5) {
             throw new ScriptExecutionError();
         }
@@ -111,7 +113,7 @@ public class MusicBandScanner {
 
         MusicGenre musicGenre = null;
         String musicGenreLine = scanner.next();
-        responseBuilder.add("Жанр музыки (ROCK, PSYCHEDELIC_CLOUD_RAP, SOUL): %s".formatted(musicGenreLine));
+        responseBuilder.add(username, "Жанр музыки (ROCK, PSYCHEDELIC_CLOUD_RAP, SOUL): %s".formatted(musicGenreLine));
         try {
             musicGenre = MusicGenre.valueOf(musicGenreLine.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -120,18 +122,18 @@ public class MusicBandScanner {
 
         String studioName = null, address = null;
         studioName = scanner.next().trim();
-        responseBuilder.add("Название студии: %s".formatted(studioName));
+        responseBuilder.add(username, "Название студии: %s".formatted(studioName));
         if (studioName.isEmpty()) {
             throw new ScriptExecutionError();
         }
 
         address = scanner.next().trim();
-        responseBuilder.add("Адрес: %s".formatted(address));
+        responseBuilder.add(username, "Адрес: %s".formatted(address));
         if (address.isEmpty()) {
             throw new ScriptExecutionError();
         }
 
-        responseBuilder.add("Ввод окончен успешно!");
+        responseBuilder.add(username, "Ввод окончен успешно!");
         return new MusicBand(name, new Coordinates(x, y), numberOfParticipants, dateTime, musicGenre, new Studio(studioName, address));
     }
 }

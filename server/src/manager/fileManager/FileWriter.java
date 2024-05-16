@@ -1,4 +1,4 @@
-package fileManager;
+package manager.fileManager;
 
 import com.opencsv.CSVWriter;
 import models.MusicBand;

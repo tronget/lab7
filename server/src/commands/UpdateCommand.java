@@ -4,7 +4,8 @@ import exceptions.NonexistantIdException;
 import models.MusicBand;
 import network.ResponseBuilder;
 import network.db.DmlQueryManager;
-import stateManager.CollectionManager;
+import manager.stateManager.CollectionManager;
+import network.db.UserManager;
 import utility.MusicBandScanner;
 import utility.Program;
 import utility.ScriptExecutor;
@@ -26,11 +27,12 @@ public class UpdateCommand extends CommandWithMB {
      * @param id id элемента, который надо удалить
      */
     @Override
-    public void execute(String id) {
+    public synchronized void execute(String id) {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         Hashtable<String, MusicBand> collection = CollectionManager.getInstance().getCollection();
         if (collection.isEmpty()) {
-            responseBuilder.add("Пустая коллекция.");
+            responseBuilder.add(username, "Пустая коллекция.");
             return;
         }
         try {
@@ -54,6 +56,11 @@ public class UpdateCommand extends CommandWithMB {
                 throw new NonexistantIdException(id);
             }
 
+            if (collection.get(key).getUser_id() != new UserManager(user).getId()) {
+                responseBuilder.add(username, "Вы не можете обновлять не свои объекты");
+                return;
+            }
+
             if (ScriptExecutor.getInstance().isScriptExecution()) {
                 musicBand = MusicBandScanner.scan();
                 if (musicBand == null) {
@@ -63,12 +70,12 @@ public class UpdateCommand extends CommandWithMB {
 
             new DmlQueryManager(user).updateMusicById(Long.parseLong(id), musicBand);
 
-            responseBuilder.add("Элемент коллекции успешно обновлен.");
+            responseBuilder.add(username, "Элемент коллекции успешно обновлен.");
 
         } catch (NonexistantIdException | NumberFormatException e) {
-            responseBuilder.add(e.getMessage());
+            responseBuilder.add(username, e.getMessage());
         } catch (SQLException e) {
-            responseBuilder.add("Ошибка при обновлении объекта в базе данных.");
+            responseBuilder.add(username, "Ошибка при обновлении объекта в базе данных.");
         }
     }
 }

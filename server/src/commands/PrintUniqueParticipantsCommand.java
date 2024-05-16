@@ -1,7 +1,7 @@
 package commands;
 
 import network.ResponseBuilder;
-import stateManager.CollectionManager;
+import manager.stateManager.CollectionManager;
 import utility.Program;
 
 import java.util.HashSet;
@@ -21,6 +21,6 @@ public class PrintUniqueParticipantsCommand extends Command {
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         Set<Integer> set = new HashSet<>();
         CollectionManager.getInstance().getCollection().values().forEach(el -> set.add(el.getNumberOfParticipants()));
-        responseBuilder.add(set.toString());
+        responseBuilder.add(user.getUsername(), set.toString());
     }
 }

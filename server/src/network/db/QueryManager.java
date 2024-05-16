@@ -25,6 +25,7 @@ public class QueryManager {
             ResultSet rs = statement.executeQuery(SELECT_MUSIC_QUERY);
             while (rs.next()) {
                 long id = rs.getLong("id");
+                int user_id = rs.getInt("user_id");
                 String key = rs.getString("obj_key");
                 String name = rs.getString("name");
                 int xCoord = rs.getInt("x_coord");
@@ -39,6 +40,7 @@ public class QueryManager {
                 Coordinates coordinates = new Coordinates(xCoord, yCoord);
                 Studio studio = new Studio(studioName, studioAddress);
                 MusicBand musicBand = new MusicBand(id, name, coordinates, creationDate, numberOfParticipants, establishmentDate, mg, studio);
+                musicBand.setUser_id(user_id);
                 musicBandTable.put(key, musicBand);
             }
         } catch (SQLException e) {

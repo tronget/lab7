@@ -1,4 +1,4 @@
-package stateManager;
+package manager.stateManager;
 
 import commands.*;
 import network.ResponseBuilder;
@@ -38,11 +38,12 @@ public class CommandsManager {
      * @param userInput строка считанная из консоли, в которой содержится команда
      */
     public static void defineCommand(String[] userInput, User user) {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         String commandName = userInput[0];
         if (commands.containsKey(commandName)) {
             if (userInput.length > 2) {
-                responseBuilder.add("Слишком много аргументов!");
+                responseBuilder.add(username, "Слишком много аргументов!");
                 return;
             }
 
@@ -58,11 +59,12 @@ public class CommandsManager {
             }
 
         } else if (commandName.isEmpty()) {
-            responseBuilder.add("Пустая команда!");
+            responseBuilder.add(username, "Пустая команда!");
         } else {
-            responseBuilder.add("Такой команды нет!");
+            responseBuilder.add(username, "Такой команды нет!");
         }
     }
+
     public static Command getCommandByName(String commandName) {
         return commands.getOrDefault(commandName, null);
     }

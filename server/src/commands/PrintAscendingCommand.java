@@ -2,7 +2,7 @@ package commands;
 
 import models.MusicBand;
 import network.ResponseBuilder;
-import stateManager.CollectionManager;
+import manager.stateManager.CollectionManager;
 import utility.Program;
 
 import java.util.Hashtable;
@@ -18,14 +18,15 @@ public class PrintAscendingCommand extends Command {
      */
     @Override
     public void execute() {
+        String username = user.getUsername();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
         Hashtable<String, MusicBand> collection = CollectionManager.getInstance().getCollection();
         if (collection.isEmpty()) {
-            responseBuilder.add("Пустая коллекция.");
+            responseBuilder.add(username, "Пустая коллекция.");
             return;
         }
         collection.values().stream().sorted().forEach(
-                musicBand -> responseBuilder.add(musicBand.toString())
+                musicBand -> responseBuilder.add(username, musicBand.toString())
         );
     }
 }

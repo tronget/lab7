@@ -20,6 +20,8 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
     private LocalDateTime establishmentDate; //Поле может быть null
     private MusicGenre genre; //Поле может быть null
     private Studio studio; //Поле может быть null
+    private int user_id;
+
 
     public MusicBand() {
         this.ID = IdGenerator.generate();
@@ -90,6 +92,10 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
         return studio;
     }
 
+    public int getUser_id() {
+        return user_id;
+    }
+
     public void setID(Long ID) {
         this.ID = ID;
     }
@@ -118,6 +124,10 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
         this.studio = studio;
     }
 
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
     @Override
     public boolean validate() {
         return ID != null && ID > 0 &&
@@ -133,14 +143,15 @@ public class MusicBand implements Validatable, Comparable<MusicBand>, Serializab
     @Override
     public String toString() {
         return "MusicBand{" +
-                "id=" + ID +
+                "ID=" + ID +
                 ", name='" + name + '\'' +
                 ", coordinates=" + coordinates +
-                ", creationDate=" + CREATION_DATE +
+                ", CREATION_DATE=" + CREATION_DATE +
                 ", numberOfParticipants=" + numberOfParticipants +
                 ", establishmentDate=" + establishmentDate +
                 ", genre=" + genre +
                 ", studio=" + studio +
+                ", user_id=" + user_id +
                 '}';
     }
 

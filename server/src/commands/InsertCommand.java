@@ -4,7 +4,8 @@ import exceptions.ExistantKeyException;
 import models.MusicBand;
 import network.ResponseBuilder;
 import network.db.DmlQueryManager;
-import stateManager.CollectionManager;
+import manager.stateManager.CollectionManager;
+import network.db.UserManager;
 import utility.MusicBandScanner;
 import utility.Program;
 import utility.ScriptExecutor;
@@ -24,9 +25,10 @@ public class InsertCommand extends CommandWithMB {
      * @param key ключ по которому элемент запишется в коллекцию
      */
     @Override
-    public void execute(String key) {
+    public synchronized void execute(String key) {
+        String username = user.getUsername();
+        int user_id = new UserManager(user).getId();
         ResponseBuilder responseBuilder = Program.getInstance().getResponseBuilder();
-        Hashtable<String, MusicBand> collection = CollectionManager.getInstance().getCollection();
         try {
             if (CollectionManager.getInstance().hasSuchKey(key)) {
                 throw new ExistantKeyException(key);
@@ -37,15 +39,14 @@ public class InsertCommand extends CommandWithMB {
                     return;
                 }
             }
-
+            musicBand.setUser_id(user_id);
             new DmlQueryManager(user).insertMusic(key, musicBand);
-
-            responseBuilder.add("Элемент сохранен в коллекции.");
+            responseBuilder.add(username, "Элемент сохранен в коллекции.");
 
         } catch (ExistantKeyException e) {
-            responseBuilder.add(e.getMessage());
+            responseBuilder.add(username, e.getMessage());
         } catch (SQLException e) {
-            responseBuilder.add("Ошибка при добавлении объекта в базу данных!");
+            responseBuilder.add(username, "Ошибка при добавлении объекта в базу данных!");
         }
     }
 }

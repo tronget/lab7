@@ -8,17 +8,19 @@ import java.io.ObjectInputStream;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RequestLogic {
     private final DatagramChannel channel;
-    private SocketAddress clientAddress;
+    private final Map<String, SocketAddress> userAddressMap = new HashMap<>();
 
     public RequestLogic(DatagramChannel channel) {
         this.channel = channel;
     }
 
-    public SocketAddress getClientAddress() {
-        return clientAddress;
+    public SocketAddress getClientAddress(String username) {
+        return userAddressMap.get(username);
     }
 
     public Request receive() {
@@ -34,11 +36,13 @@ public class RequestLogic {
     private Request getRequest(ByteBuffer buffer) {
         Request request;
         try {
-            clientAddress = channel.receive(buffer);
+            SocketAddress clientAddress = channel.receive(buffer);
             if (buffer.array()[0] == 0) {
                 return null;
             }
             request = (Request) deserializeBytes(buffer.array());
+            String username = request.getUsername();
+            userAddressMap.put(username, clientAddress);
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Ошибка при считывании данных с клиента.");
             throw new RuntimeException(e);
